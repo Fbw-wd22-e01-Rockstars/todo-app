@@ -1,40 +1,52 @@
-import User from "../models/userModel.js"
-import bcrypt from "bcrypt"
-export const signupController = async (req, res) =>{
-    
-    // 1. I will search my DB either user is already registered
-console.log(req.body)
-   const {email, password, name} = req.body
+import User from "../models/userModel.js";
+import bcrypt from "bcrypt";
 
-   const foundUser = await User.findOne({email})
-   
-   // 2. if a user is already registered with the same email address we will throw an error
+export const signupController = async (req, res, next) => {
+  try {
+    let { email, password, passwordConfirm, name } = req.body;
 
-   if(foundUser) return res.status(401).json({status:"failed", message:"email already registered"})
-   
-   // Hash the password before saving on database
+    const foundUser = await User.findOne({ email });
+    // 2. if a user is already registered with the same email address we will throw an error
+    if (foundUser) {
+      const error = new Error("The user does already exist");
+      error.status = "failed";
+      error.statusCode = 409;
+      throw error;
+    }
+    // For security: Only allow fields we need
+    const savedUser = await User.create({
+      name,
+      email,
+      password,
+      passwordConfirm,
+    });
+    res
+      .status(200)
+      .json({ status: "success", message: "user registered", data: savedUser });
+  } catch (error) {
+    next(error);
+  }
+};
 
-   const saltRound = 10
-   const salt = await bcrypt.genSalt(saltRound)
-   const hashedPassword = await bcrypt.hash(password, salt)
+export const signinController = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
 
-   req.body.password = hashedPassword
-   const user = new User(req.body)
-   const savedUser = await user.save()
-   res.status(200).json({status: "success", message :"user registered"})
-
-}
-
-export const signinController = async (req, res) =>{
-
-    console.log(req.body)
-    const  {email, password} = req.body
-    
-    const currentUser = await User.findOne({email})
-    if(!currentUser) return res.status(400).json({status: "failed", message: "Invalid Credentials"})
-
-    const verified = await bcrypt.compare(password, currentUser.password)
-
-    if(!verified) return res.status(400).json({status: "failed", message: "Invalid Credentials"})
-    res.status(200).json({status: "success", data: {email : currentUser.email, name: currentUser.name}})
-}
+    const currentUser = await User.findOne({ email });
+    if (
+      !currentUser ||
+      !(await bcrypt.compare(password, currentUser.password))
+    ) {
+      const error = new Error("Invalid credentials!");
+      error.status = "failed";
+      error.statusCode = 409;
+      throw error;
+    }
+    res.status(200).json({
+      status: "success",
+      data: { email: currentUser.email, name: currentUser.name },
+    });
+  } catch (error) {
+    next(error);
+  }
+};

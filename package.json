@@ -4,7 +4,7 @@
   "description": "- Full stack application  - We want to deploy it as one app on heroku in future - Need to take care of the Structure of  The Application:",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",

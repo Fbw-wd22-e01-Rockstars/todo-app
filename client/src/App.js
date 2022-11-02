@@ -1,29 +1,41 @@
-import './App.css';
-import Signin from './components/Auth/Signin';
-import Signup from './components/Auth/Signup';
-import Dashboard from "./components/Dashboard/Dashboard"
-import Home from './components/Home/Home';
-import {BrowserRouter as Router,
-Route,
-Routes} from "react-router-dom"
-import NavBar from './components/NavBar/NavBar';
+import "./App.css";
+import SignUp from "./components/Auth/SignUp";
+import SignIn from "./components/Auth/SignIn";
+import Dashboard from "./components/Dashboard/Dashboard";
+import Home from "./components/Home/Home";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import NavBar from "./components/NavBar/NavBar";
+import { ThemeProvider } from "@mui/material";
+import { createTheme } from "@mui/material";
+
+const theme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#01579b",
+    },
+    secondary: {
+      main: "#ff80ab",
+    },
+  },
+});
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-
-      <Router>
-        <NavBar/>
-        TO-DO App
-          <Routes>
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/signin' element={<Signin />} />
-            <Route path='/signup' element={<Signup />} />
-            <Route path='/' element={<Home />} />
-          </Routes>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <NavBar />
+          <div className="main_container">
+            <Routes>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/" element={<Home />} />
+            </Routes>
+          </div>
         </Router>
-      </header>
+      </ThemeProvider>
     </div>
   );
 }
