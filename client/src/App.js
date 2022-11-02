@@ -1,4 +1,4 @@
-import './App.css';
+import styles from '../src/App.scss'
 import Signin from './components/Auth/Signin';
 import Signup from './components/Auth/Signup';
 import Dashboard from "./components/Dashboard/Dashboard"
@@ -15,7 +15,6 @@ function App() {
 
       <Router>
         <NavBar/>
-        TO-DO App
           <Routes>
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/signin' element={<Signin />} />
