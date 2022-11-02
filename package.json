@@ -4,7 +4,8 @@
   "description": "- Full stack application  - We want to deploy it as one app on heroku in future - Need to take care of the Structure of  The Application:",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +15,18 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-validator": "^6.14.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.7.0"
+    "mongoose": "^6.7.0",
+    "sass": "^1.55.0"
   },
-  "type": "module"
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fbw-wd22-e01-Rockstars/todo-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Fbw-wd22-e01-Rockstars/todo-app/issues"
+  },
+  "homepage": "https://github.com/Fbw-wd22-e01-Rockstars/todo-app#readme"
 }

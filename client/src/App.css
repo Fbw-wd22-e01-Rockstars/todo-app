@@ -1,0 +1,20 @@
+.navbar {
+  background-color: #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  color: white;
+  font-size: 1.2rem;
+}
+.navbar a {
+  color: white;
+  text-decoration: none;
+}
+.navbar ul {
+  display: flex;
+  list-style: none;
+}
+.navbar ul li {
+  margin-left: 20px;
+}/*# sourceMappingURL=App.css.map */
