@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar";
 import { ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material";
+import { Toaster } from "react-hot-toast";
 
 const theme = createTheme({
   palette: {
@@ -24,6 +25,7 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
+        <Toaster position="top-center" reverseOrder={false} />
         <Router>
           <NavBar />
           <div className="main_container">

@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import toast from "react-hot-toast";
 
 function Copyright(props) {
   return (
@@ -54,10 +55,20 @@ export default function SignUp() {
       didMount.current = true;
       return;
     }
+    if (Object.values(userData).some((el) => el === "")) {
+      toast.error("Please fill in all the fields");
+      return;
+    }
     axios
       .post(`${process.env.REACT_APP_BE_URL}/auth/signup`, userData)
-      .then((res) => console.log("response from backend", res))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        console.log("response from backend", res);
+        toast.success("Successfully signed up");
+      })
+      .catch((err) => {
+        console.error(err.response.data);
+        toast.error(err.response.data.message);
+      });
   }, [userData]);
 
   return (
