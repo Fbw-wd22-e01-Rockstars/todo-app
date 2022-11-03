@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import axios from "axios";
+import validator from "validator";
 import { NavLink } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
@@ -37,37 +38,55 @@ export default function SignIn() {
     email: "",
     password: "",
   });
-  const didMount = useRef(false);
 
   const submitHandler = (e) => {
     e.preventDefault();
-
-    setUserData({
-      email: e.target.email.value,
-      password: e.target.password.value,
-    });
-  };
-
-  useEffect(() => {
-    if (!didMount.current) {
-      didMount.current = true;
-      return;
-    }
     if (Object.values(userData).some((el) => el === "")) {
-      toast.error("Please fill in all the fields");
-      return;
+      return toast.error("Please fill in all the fields");
+    }
+    if (!validator.isEmail(userData.email)) {
+      return toast.error("Please enter valid email");
     }
     axios
       .post(`${process.env.REACT_APP_BE_URL}/auth/signin`, userData)
       .then((res) => {
         console.log("response from backend", res);
         toast.success("Successfully signed up");
+        setUserData({ email: "", password: "" });
       })
       .catch((err) => {
         console.error(err.response.data);
         toast.error(err.response.data.message);
       });
-  }, [userData]);
+  };
+
+  const onChangeHandler = (e, field) => {
+    setUserData({
+      ...userData,
+      [field]: e.target.value,
+    });
+  };
+  // useEffect(() => {
+  //   if (!didMount.current) {
+  //     didMount.current = true;
+  //     return;
+  //   }
+  //   if (Object.values(userData).some((el) => el === "")) {
+  //     toast.error("Please fill in all the fields");
+  //     return;
+  //   }
+  //   axios
+  //     .post(`${process.env.REACT_APP_BE_URL}/auth/signin`, userData)
+  //     .then((res) => {
+  //       console.log("response from backend", res);
+  //       toast.success("Successfully signed up");
+  //       setUserData();
+  //     })
+  //     .catch((err) => {
+  //       console.error(err.response.data);
+  //       toast.error(err.response.data.message);
+  //     });
+  // }, [userData]);
 
   return (
     <>
@@ -102,6 +121,8 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              value={userData.email}
+              onChange={(e) => onChangeHandler(e, "email")}
             />
             <TextField
               margin="normal"
@@ -111,7 +132,9 @@ export default function SignIn() {
               label="Password"
               type="password"
               id="password"
+              value={userData.password}
               autoComplete="current-password"
+              onChange={(e) => onChangeHandler(e, "password")}
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

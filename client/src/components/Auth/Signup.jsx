@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import validator from "validator";
 import axios from "axios";
 
 import Avatar from "@mui/material/Avatar";
@@ -38,38 +39,37 @@ export default function SignUp() {
     email: "",
     password: "",
   });
-  const didMount = useRef(false);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    setUserData({
-      name: e.target.name.value,
-      email: e.target.email.value,
-      password: e.target.password.value,
-      passwordConfirm: e.target.passwordConfirm.value,
-    });
-  };
-
-  useEffect(() => {
-    if (!didMount.current) {
-      didMount.current = true;
-      return;
-    }
     if (Object.values(userData).some((el) => el === "")) {
       toast.error("Please fill in all the fields");
       return;
     }
+    if (!validator.isEmail(userData.email))
+      return toast.error("Please fill in a valid email address");
+    if (userData.password !== userData.passwordConfirm)
+      return toast.error("The passwords do not match. Please try again!");
+
     axios
       .post(`${process.env.REACT_APP_BE_URL}/auth/signup`, userData)
       .then((res) => {
         console.log("response from backend", res);
         toast.success("Successfully signed up");
+        setUserData({ name: "", email: "", password: "", passwordConfirm: "" });
       })
       .catch((err) => {
         console.error(err.response.data);
         toast.error(err.response.data.message);
       });
-  }, [userData]);
+  };
+
+  const onChangeHandler = (e, field) => {
+    setUserData({
+      ...userData,
+      [field]: e.target.value,
+    });
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -104,6 +104,8 @@ export default function SignUp() {
                 id="name"
                 label="Name"
                 autoFocus
+                value={userData.name}
+                onChange={(e) => onChangeHandler(e, "name")}
               />
             </Grid>
             <Grid item xs={12}>
@@ -114,6 +116,8 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={userData.email}
+                onChange={(e) => onChangeHandler(e, "email")}
               />
             </Grid>
             <Grid item xs={12}>
@@ -125,6 +129,8 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                value={userData.password}
+                onChange={(e) => onChangeHandler(e, "password")}
               />
             </Grid>
             <Grid item xs={12}>
@@ -135,6 +141,8 @@ export default function SignUp() {
                 label="Confirm Password"
                 type="password"
                 id="passwordConfirm"
+                value={userData.passwordConfirm}
+                onChange={(e) => onChangeHandler(e, "passwordConfirm")}
               />
             </Grid>
           </Grid>

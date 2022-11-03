@@ -1,5 +1,11 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+const signToken = (id) =>
+  jwt.sign({ id: id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
 
 export const signupController = async (req, res, next) => {
   try {
@@ -20,9 +26,14 @@ export const signupController = async (req, res, next) => {
       password,
       passwordConfirm,
     });
-    res
-      .status(200)
-      .json({ status: "success", message: "user registered", data: savedUser });
+
+    const token = signToken(savedUser._id);
+    res.status(200).json({
+      status: "success",
+      token,
+      message: "user registered",
+      data: savedUser,
+    });
   } catch (error) {
     next(error);
   }
@@ -42,9 +53,11 @@ export const signinController = async (req, res, next) => {
       error.statusCode = 409;
       throw error;
     }
+    const token = signToken(currentUser._id);
+
     res.status(200).json({
       status: "success",
-      data: { email: currentUser.email, name: currentUser.name },
+      data: { token, email: currentUser.email, name: currentUser.name },
     });
   } catch (error) {
     next(error);
