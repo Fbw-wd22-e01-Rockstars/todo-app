@@ -8,6 +8,9 @@ function Signup() {
     name: "",
   });
 
+  const [message, setMessage] = useState(false);
+  const [failMessage, setFailMessage] = useState(false);
+
   const submitHandler = (e) => {
     e.preventDefault();
     setUserData({
@@ -17,8 +20,8 @@ function Signup() {
     });
     axios
       .post(`${process.env.REACT_APP_BE_URL}/auth/signup`, userData)
-      .then((res) => console.log("response from backend", res))
-      .catch((err) => console.log(err));
+      .then((res) => setMessage(res.data.message))
+      .catch((err) => setFailMessage(err.response.data.message));
   };
   return (
     <>
@@ -77,6 +80,20 @@ function Signup() {
           Signup
         </button>
       </form>
+
+      {message && (
+        <div className="ui success message">
+          <div className="header">Success</div>
+          <p>{message}</p>
+        </div>
+      )}
+
+      {failMessage && (
+        <div className="ui error message">
+          <div className="header">Error</div>
+          <p>{failMessage}</p>
+        </div>
+      )}
     </>
   );
 }
