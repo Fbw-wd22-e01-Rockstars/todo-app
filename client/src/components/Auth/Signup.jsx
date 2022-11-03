@@ -9,7 +9,8 @@ function Signup() {
         name:""
     })
 
-
+const [message,setMessage] = useState(false)
+const [failedMessage,setFailedMessage] = useState(false)
 
     const submitHandler = (e) =>{
         e.preventDefault()
@@ -19,8 +20,17 @@ function Signup() {
             password:e.target.password.value
         })
         axios.post(`${process.env.REACT_APP_BE_URL}/auth/signup`,userData)
-    .then(res=>console.log("response from backend", res))
-    .catch(err => console.log(err))
+    .then(res=>{
+        setFailedMessage(false)
+        setMessage(true)
+    })
+    .catch(err => {
+       if (err.response.data.status==="failed"){
+        setMessage(false)
+        setFailedMessage(true)
+       }
+    })
+   
 
     }
     return (
@@ -33,16 +43,19 @@ function Signup() {
                 <input type="text" id="name" placeholder="enter your name" name="name" />
                 </div>
                 <label htmlFor="email">Email   :  </label>
-                <input type="email" id="email" placeholder="enter your email" name="email"/>
+                <input type="email" id="email" placeholder="enter your email" name="email" />
                 </div>
 
                 <div>
                 <label htmlFor="password">password   :  </label>
-                <input type="password" id="password" placeholder="enter your password" name="password" />
+                <input type="password" id="password" placeholder="enter your password" name="password"  />
                 </div>
 
-                <button type='submit'> Signup</button>
+                <button type='submit'> Signup </button>
             </form>
+            <hr />
+            {message ? (<h3 style={{color:"green"}}>User registered successfully!</h3>):""}
+            {failedMessage ? (<h3 style={{color:"red"}}>User already exists!</h3>):""}
         </div>
     )
 }

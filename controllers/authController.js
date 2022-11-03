@@ -1,9 +1,12 @@
 import User from "../models/userModel.js"
 import bcrypt from "bcrypt"
+import  jwt  from 'jsonwebtoken';
+
+
 export const signupController = async (req, res) =>{
     
     // 1. I will search my DB either user is already registered
-console.log(req.body)
+
    const {email, password, name} = req.body
 
    const foundUser = await User.findOne({email})
@@ -20,8 +23,18 @@ console.log(req.body)
 
    req.body.password = hashedPassword
    const user = new User(req.body)
-   const savedUser = await user.save()
-   res.status(200).json({status: "success", message :"user registered"})
+   await user.save()
+//    res.status(200).json({status: "success", message :"user registered"})
+
+const payload = {
+    id:user._id,
+    name:user.name
+}
+
+jwt.sign(payload,"randomString",{expiresIn:"1h"},(err,token)=>{
+    if(err) throw err;
+    res.status(200).json({token,status:"success",message:"User registered successfully!"})
+  })
 
 }
 
