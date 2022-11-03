@@ -9,7 +9,7 @@ function Signup() {
         name:""
     })
 
-
+    const [message, setMessage] = useState(false)
 
     const submitHandler = async (e) =>{
         e.preventDefault()
@@ -27,6 +27,7 @@ function Signup() {
         axios.post(`${process.env.REACT_APP_BE_URL}/auth/signup`,userData)
         .then(res=>console.log("response from backend", res))
         .catch(err => console.log(err))
+        setMessage(true)
     }
 // This blurHandler will be triggered when every user will switch the fields in this way state will be already updated before triggering submit Handler
 
@@ -63,6 +64,7 @@ function Signup() {
 
                 <button type='submit'> Signup</button>
             </form>
+            { message ? <h3 style={{ color: 'green'}}> Registered succesfully </h3> : "" }
         </div>
     )
 }

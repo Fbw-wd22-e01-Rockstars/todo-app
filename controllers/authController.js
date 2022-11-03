@@ -10,7 +10,7 @@ console.log(req.body)
    
    // 2. if a user is already registered with the same email address we will throw an error
 
-   if(foundUser) return res.status(401).json({status:"failed", message:"email already registered"})
+   if(foundUser) return res.status(401).json({status:"failed", message:"Email already registered"})
    
    // Hash the password before saving on database
 
@@ -21,7 +21,7 @@ console.log(req.body)
    req.body.password = hashedPassword
    const user = new User(req.body)
    const savedUser = await user.save()
-   res.status(200).json({status: "success", message :"user registered"})
+   res.status(200).json({status: "success", message :"Registered successfully"})
 
 }
 
