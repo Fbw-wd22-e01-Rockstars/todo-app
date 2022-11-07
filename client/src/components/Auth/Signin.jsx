@@ -1,7 +1,8 @@
 import React,{useState, useEffect} from 'react'
 import axios from "axios"
+import {useNavigate} from "react-router-dom"
 
-function Signin() {
+function Signin({authHandler}) { // we destructure the authHandler function from the props which we passed in the parent
 
     const [userData, setUserData] = useState({
         email:"",
@@ -9,6 +10,9 @@ function Signin() {
   
     })
 
+    const [error, setError] = useState("")
+
+    const navigate = useNavigate()
 
 
 
@@ -19,8 +23,12 @@ function Signin() {
             password:e.target.password.value
         })
         axios.post(`${process.env.REACT_APP_BE_URL}/auth/signin`,userData)
-    .then(res=>console.log("response from backend", res))
-    .catch(err => console.log(err))
+    .then(res => {
+        authHandler()
+        localStorage.setItem("toDoToken", JSON.stringify(res.data.data.token))
+        navigate("/dashboard")
+    })
+    .catch(err => setError(err.response.data.message))
     }    
     return (
     <div>
@@ -37,6 +45,10 @@ function Signin() {
             </div>
 
             <button type='submit'> Log In</button>
+            <hr />
+            {
+                error ? (<p>{error}</p>) : null
+            }
         </form>
 
         </div>

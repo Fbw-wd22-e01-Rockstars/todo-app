@@ -5,6 +5,7 @@ import authRouter from "./routes/authRouter.js"
 import mongoose from "mongoose"
 import userRouter from "./routes/userRoutes.js"
 import todoRouter from "./routes/todoRouter.js"
+import { verifyToken } from "./middlewares/verifyToken.js"
 
 dotenv.config()
 const app = express();
@@ -18,7 +19,7 @@ const DB = process.env.DATABASE.replace("<PASSWORD>", process.env.DATABASE_PASSW
 
 app.use("/auth", authRouter)
 app.use("/user", userRouter)
-app.use("/", todoRouter)
+app.use("/", verifyToken, todoRouter)
 
 app.post("*", (req,res)=>{
     res.status(200).json({message: "Reached"})

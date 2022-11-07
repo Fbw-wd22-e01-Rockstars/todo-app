@@ -5,7 +5,7 @@ import { createTodo } from "../controllers/todoController.js"
 
 const router = express.Router()
 
-router.post("/create-todo", createTodo)
+router.post("/dashboard/create-todo", createTodo)
 
 
 export default router

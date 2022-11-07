@@ -14,4 +14,12 @@ const userSchema = mongoose.Schema({
     password : {type: String, required : true}
 })
 
+// INSTANCE METHOD: 
+// available on all Documents of a certain Collection.
+// checks if password is correct
+// userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+//     return  await bcrypt.compare(candidatePassword, userPassword) // this.password is not available in the output due to select: false in the model. bcrypt.compare() returns true if passwords are the same or false if not.
+//   }
+
+
 export default mongoose.model("UserModel", userSchema)

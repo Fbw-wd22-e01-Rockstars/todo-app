@@ -40,7 +40,7 @@ const userData = {name, email, password}
     .then((res)=> {
         console.log(res)
         console.log(res.data)
-        localStorage.setItem("profile", JSON.stringify(res.data));
+        localStorage.setItem("toDoToken", JSON.stringify(res.data));
 
         setFailMessage(false)
         setMessage(true)

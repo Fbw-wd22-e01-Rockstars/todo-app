@@ -78,6 +78,19 @@ export const signinController = async (req, res) =>{
 
     const verified = await bcrypt.compare(password, currentUser.password)
 
-    if(!verified) return res.status(400).json({status: "failed", message: "Invalid Credentials"})
-    res.status(200).json({status: "success", data: {email : currentUser.email, name: currentUser.name}})
+    if(!verified) return res.status(400).json({
+        status: "failed",
+        message: "Invalid Credentials"
+    })
+
+    const token = createSendToken(currentUser, res)
+
+
+    res.status(200).json({
+        status: "success",
+        token,
+        data: {
+            email : currentUser.email,
+            name: currentUser.name
+        }})
 }
