@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
-import axios from "axios"
+import React, { useState } from "react";
+import axios from "axios";
 
 function Signup() {
+     const [userData, setUserData] = useState({
+       email: "",
+       password: "",
+       name: "",
+     });
 
-    const [userData, setUserData] = useState({
-        email:"",
-        password:"",
-        name:""
-    })
+  
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -121,4 +122,4 @@ function Signup() {
     )
 }
 
-export default Signup
+export default Signup;
