@@ -8,26 +8,12 @@ function Signin() {
         password:"",
   
     })
-
-const blurHandler = (e) =>{
-    
-        const propertyName = e.target.name
-        const propertyValue = e.target.value
-        setUserData(oldState=>{
-            return {
-                ...oldState,
-        [propertyName]: propertyValue,
-        
-    }}
-    )
-
-}
-
-
     const submitHandler = (e) =>{
         e.preventDefault()
-
-        console.log(userData)
+        setUserData({
+            email:e.target.email.value,
+            password:e.target.password.value
+        })
         axios.post(`${process.env.REACT_APP_BE_URL}/auth/signin`,userData)
     .then(res=>console.log("response from backend", res))
     .catch(err => console.log(err))
@@ -38,12 +24,12 @@ const blurHandler = (e) =>{
         <form action='post' onSubmit={submitHandler}>
             <div>
             <label htmlFor="email">Email   :  </label>
-            <input type="email" id="email" placeholder="enter your email" name="email" autoComplete='none' onBlur={blurHandler}/>
+            <input type="email" id="email" placeholder="enter your email" name="email"/>
             </div>
 
             <div>
             <label htmlFor="password">password   :  </label>
-            <input type="password" id="password" placeholder="enter your password" name="password" onBlur={blurHandler}/>
+            <input type="password" id="password" placeholder="enter your password" name="password" />
             </div>
 
             <button type='submit'> Log In</button>
