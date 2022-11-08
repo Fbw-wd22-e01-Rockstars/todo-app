@@ -62,6 +62,7 @@ export const signinController = async (req, res) => {
   console.log(myToken)
   res.status(200).json({
     status: "success",
-    data: { email: currentUser.email, name: currentUser.name },
+    data: { email: currentUser.email, name: currentUser.name , token},
   });
 };
+

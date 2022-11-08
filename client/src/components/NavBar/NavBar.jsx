@@ -11,6 +11,8 @@ function NavBar() {
                         Home
                     </Link>
                 </li>
+                {!authorized?
+                (<>
                 <li>
                     <Link to="/signin"  style={{textDecoration:"none"}}>
                         Signin
@@ -21,11 +23,24 @@ function NavBar() {
                         Signup
                     </Link>
                 </li>
-                <li>
+                </>)
+                :null}
+
+                {authorized?
+                (<li>
                     <Link to="/dashboard"  style={{textDecoration:"none"}}>
                         Dashboard
                     </Link>
+                </li>)
+                : null}
+
+
+                 <button onClick={mangageAuthorization}>
+                <li>
+                    {authorized? "Logout" : "Login"}
                 </li>
+                 </button>
+     
             </ul>
   
         </div>
