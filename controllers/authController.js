@@ -52,6 +52,14 @@ export const signinController = async (req, res) => {
     return res
       .status(400)
       .json({ status: "failed", message: "Invalid Credentials" });
+      
+      const payload = {
+        email,
+        userName: currentUser.name
+      }
+
+      const myToken = jwt.sign(payload, process.env.JWT_SECRET,  {expiresIn:"1h"} )
+  console.log(myToken)
   res.status(200).json({
     status: "success",
     data: { email: currentUser.email, name: currentUser.name },
