@@ -1,17 +1,18 @@
-import React, {useState} from 'react'
+import React, {useState,useContext} from 'react'
 import FileBase64 from "react-file-base64";
 import axios from "axios";
+import TodosContext from '../../context/Todos/TodosContext';
 
 
 
-function NewTask(props) {
+function NewTask() {
 
     const [image, setImage] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [message, setMessage] = useState(false);
   
-    const {updateTaskList, fetchUpdatedTasks} = props
+    const {updateTaskList, fetchUpdatedTasks} = useContext(TodosContext)
 
     const postRequestHandler = async (e) => {
         e.preventDefault();

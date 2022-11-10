@@ -9,12 +9,9 @@ Route,
 Routes} from "react-router-dom"
 import NavBar from './components/NavBar/NavBar';
 import AuthState from './context/Auth/AuthState';
+import TodosState from './context/Todos/TodosState';
 
 function App() {
-
-  const [authorized, setAuthorized] = useState(false)
-
-  const authHandler = () => setAuthorized(oldState=>!oldState)
 
   /* const logoutHandler = () => setAuthorized(false) */
 
@@ -27,15 +24,17 @@ function App() {
      
             <Router>
             <AuthState>
-              <NavBar/>
-              TO-DO App
-                <Routes>
-                  <Route path='/dashboard' element={<Dashboard />} />
-                  <Route path='/signin' element={<Signin itCouldBeAnyName={authHandler} />} />
-                  <Route path='/signup' element={<Signup />} />
-                  <Route path='/' element={<Home />} />
-                </Routes>
-                </AuthState>
+              <TodosState>
+                <NavBar/>
+                TO-DO App
+                  <Routes>
+                    <Route path='/dashboard' element={<Dashboard />} />
+                    <Route path='/signin' element={<Signin  />} />
+                    <Route path='/signup' element={<Signup />} />
+                    <Route path='/' element={<Home />} />
+                  </Routes>
+                </TodosState>
+              </AuthState>
               </Router>
       
       </header>

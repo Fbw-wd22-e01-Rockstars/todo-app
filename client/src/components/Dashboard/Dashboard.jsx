@@ -12,24 +12,11 @@ function Dashboard() {
   const navigate = useNavigate()
   const {authorized} = useContext(AuthContext)
 
-  const [taskList, setTaskList] = useState([])
 
-  const updateTaskList = ( list ) =>{
-    setTaskList(list)
-  }
 
-  const fetchUpdatedTasks = () =>{
-    const myToken = JSON.parse(localStorage.getItem("toDoToken"))
-        const configuration = {
-            
-            headers:{
-                'Authorization' : `Bearer ${myToken}`
-            }
-        }
-    axios.get(`${process.env.REACT_APP_BE_URL}/dashboard/my-tasks`,configuration)
-    .then(res=>setTaskList(res.data.toDoList))
-    .catch(err=>console.log(err))
-  }
+
+
+  
 
   //Component will mount
 
@@ -52,8 +39,8 @@ function Dashboard() {
 
   return (
     <div>
-      <NewTask updateTaskList={updateTaskList} fetchUpdatedTasks={fetchUpdatedTasks}/>
-      <TasksList taskList={taskList} updateTaskList={updateTaskList}/>
+      <NewTask />
+      <TasksList />
     </div>
   );
 }

@@ -1,13 +1,14 @@
 import axios from 'axios'
 import React from 'react'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useState,useContext } from 'react'
+import { useEffect } from 'react';
+import TodosContext from '../../context/Todos/TodosContext';
 
-function TasksList(props) {
+function TasksList() {
 
 
-    const {taskList, updateTaskList} = props
-    console.log("props in tasklist", props)
+    const {taskList, updateTaskList,getAllTasks} = useContext(TodosContext)
+    
     const listStyling = {
 
         listStyle:"none"
@@ -15,16 +16,7 @@ function TasksList(props) {
 
     useEffect(()=>{
 
-        const myToken = JSON.parse(localStorage.getItem("toDoToken"))
-        const configuration = {
-            
-            headers:{
-                'Authorization' : `Bearer ${myToken}`
-            }
-        }
-        axios.get(`${process.env.REACT_APP_BE_URL}/dashboard/my-tasks`,configuration)
-            .then(res=>updateTaskList(res.data.toDoList))
-            .catch(err=>console.log(err))
+        getAllTasks();
     },[])
     return (
         <>
