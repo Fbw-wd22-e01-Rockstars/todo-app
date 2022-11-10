@@ -4,11 +4,13 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NewTask from "./NewTask";
 import TasksList from "./TasksList";
+import { useContext } from "react";
+import AuthContext from "../../context/Auth/AuthContext";
 
-function Dashboard(props) {
+function Dashboard() {
  
   const navigate = useNavigate()
-  const {authorized} = props
+  const {authorized} = useContext(AuthContext)
 
   const [taskList, setTaskList] = useState([])
 

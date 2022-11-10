@@ -8,6 +8,7 @@ import {BrowserRouter as Router,
 Route,
 Routes} from "react-router-dom"
 import NavBar from './components/NavBar/NavBar';
+import AuthState from './context/Auth/AuthState';
 
 function App() {
 
@@ -23,17 +24,20 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-
-      <Router>
-        <NavBar authorized={authorized} authHandler={authHandler}/>
-        TO-DO App
-          <Routes>
-            <Route path='/dashboard' element={<Dashboard authorized={authorized}/>} />
-            <Route path='/signin' element={<Signin itCouldBeAnyName={authHandler} />} />
-            <Route path='/signup' element={<Signup />} />
-            <Route path='/' element={<Home />} />
-          </Routes>
-        </Router>
+     
+            <Router>
+            <AuthState>
+              <NavBar/>
+              TO-DO App
+                <Routes>
+                  <Route path='/dashboard' element={<Dashboard />} />
+                  <Route path='/signin' element={<Signin itCouldBeAnyName={authHandler} />} />
+                  <Route path='/signup' element={<Signup />} />
+                  <Route path='/' element={<Home />} />
+                </Routes>
+                </AuthState>
+              </Router>
+      
       </header>
     </div>
   );

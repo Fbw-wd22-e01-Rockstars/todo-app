@@ -1,9 +1,11 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect,useContext} from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
 import { GoogleLogin } from "react-google-login"
+import AuthContext from '../../context/Auth/AuthContext';
 
-function Signin(props) {
+function Signin() {
+
 
     const [userData, setUserData] = useState({
         email:"",
@@ -11,10 +13,10 @@ function Signin(props) {
   
     })
 
-const {itCouldBeAnyName} = props
+const {login,error} = useContext(AuthContext)
 
 const navigate = useNavigate()
-const [error, setError] = useState("")
+
 
 const blurHandler = (e) =>{
     
@@ -32,15 +34,9 @@ const blurHandler = (e) =>{
 
 
     const submitHandler = (e) =>{
-        e.preventDefault()
+        e.preventDefault();
+        login(userData);
 
-        axios.post(`${process.env.REACT_APP_BE_URL}/auth/signin`,userData)
-    .then(res=>{
-        localStorage.setItem("toDoToken",JSON.stringify(res.data.data.token))
-        itCouldBeAnyName()
-        navigate("/dashboard")
-    })
-    .catch(err => setError(err.response.data.message))
     }   
     
     const onSuccess = (res) => {
