@@ -1,29 +1,72 @@
 import React from "react";
-import { Link, BrowserRouter as router, Router } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../../context/Auth/AuthContext";
+import {
+  Link,
+  BrowserRouter as router,
+  Router,
+  useNavigate,
+} from "react-router-dom";
 function NavBar() {
+  const { authorized, authHandler } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  const mangageAuthorization = () => {
+    if (authorized) {
+      navigate("/");
+      authHandler();
+    } else navigate("/signin");
+  };
+
   return (
-    <>
-      <div className="ui inverted segment fluid">
-        <ul className="ui inverted secondary pointing menu">
-          <li className="active item">
-            <Link to="/" className="item">
-              Home
+    <div>
+      <ul
+        style={{
+          display: "flex",
+          listStyle: "none",
+          justifyContent: "space-evenly",
+          width: "100vw",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          backgroundColor: "white",
+        }}
+      >
+        <li>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            Home
+          </Link>
+        </li>
+        {!authorized ? (
+          <>
+            <li>
+              <Link to="/signin" style={{ textDecoration: "none" }}>
+                Signin
+              </Link>
+            </li>
+            <li>
+              <Link to="/signup" style={{ textDecoration: "none" }}>
+                Signup
+              </Link>
+            </li>
+          </>
+        ) : null}
+
+        {authorized ? (
+          <li>
+            <Link to="/dashboard" style={{ textDecoration: "none" }}>
+              Dashboard
             </Link>
           </li>
-          <li className="item">
-            <Link to="/signin">Sign in</Link>
-          </li>
-          <li className="item">
-            <Link to="/signup">Sign up</Link>
-          </li>
-          <li className="item">
-            <Link to="/dashboard">Dashboard</Link>
-          </li>
-        </ul>
-      </div>
-    </>
+        ) : null}
+
+        <button onClick={mangageAuthorization}>
+          <li>{authorized ? "Logout" : "Login"}</li>
+        </button>
+      </ul>
+    </div>
   );
 }
 
 export default NavBar;
-

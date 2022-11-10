@@ -1,27 +1,39 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function Signup() {
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
-    name: "",
-  });
+const Signup = ()=> {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [message, setMessage] = useState(false);
   const [failMessage, setFailMessage] = useState(false);
 
+  const userData = { name, email, password };
+
   const submitHandler = (e) => {
     e.preventDefault();
-    setUserData({
-      name: e.target.name.value,
-      email: e.target.email.value,
-      password: e.target.password.value,
-    });
     axios
       .post(`${process.env.REACT_APP_BE_URL}/auth/signup`, userData)
-      .then((res) => setMessage(res.data.message))
-      .catch((err) => setFailMessage(err.response.data.message));
+      .then((res) => {
+        console.log(res);
+        localStorage.setItem("toDoToken", JSON.stringify(res.data));
+
+        setFailMessage(false);
+        setMessage(true);
+
+        setName("");
+        setEmail("");
+        setPassword("");
+      })
+      .catch((err) => {
+        if (err.response.data.status === "failed") {
+          setMessage(false);
+          setFailMessage(true);
+
+          setEmail("");
+        }
+      });
   };
   return (
     <>
@@ -42,6 +54,8 @@ function Signup() {
                 placeholder="enter your name"
                 name="name"
                 className="field"
+                onChange={(e) => setName(e.target.value)}
+                value={name}
               />
               <i className="user icon"></i>
             </div>
@@ -56,6 +70,8 @@ function Signup() {
                 placeholder="enter your email"
                 name="email"
                 className="field"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <i className="envelope icon"></i>
             </div>
@@ -69,6 +85,8 @@ function Signup() {
                 id="password"
                 placeholder="enter your password"
                 name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <i className="lock icon"></i>
             </div>
@@ -81,18 +99,16 @@ function Signup() {
         </button>
       </form>
 
-      {message && (
-        <div className="ui success message">
-          <div className="header">Success</div>
-          <p>{message}</p>
-        </div>
+      {message ? (
+        <h3 className="ui success message">Data inserted successfully!</h3>
+      ) : (
+        ""
       )}
 
-      {failMessage && (
-        <div className="ui error message">
-          <div className="header">Error</div>
-          <p>{failMessage}</p>
-        </div>
+      {failMessage ? (
+        <h3 className="ui error message ">User already exists!!</h3>
+      ) : (
+        ""
       )}
     </>
   );
