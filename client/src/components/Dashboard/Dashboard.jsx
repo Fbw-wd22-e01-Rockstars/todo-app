@@ -7,7 +7,7 @@ import TasksList from "./TasksList";
 import { useContext } from "react";
 import AuthContext from "../../context/Auth/AuthContext";
 
-function Dashboard() {
+function Dashboard(props) {
  
   const navigate = useNavigate()
   const {authorized} = props
