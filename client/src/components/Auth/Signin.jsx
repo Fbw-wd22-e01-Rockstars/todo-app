@@ -1,84 +1,119 @@
-import React,{useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
-import { GoogleLogin } from "react-google-login"
+import { GoogleLogin, GoogleLogout } from "react-google-login"
+import { gapi } from "gapi-script"
+import { useRef } from 'react'
 
 function Signin(props) {
 
+    const [error, setError] = useState("")
     const [userData, setUserData] = useState({
-        email:"",
-        password:"",
-  
+        email: "",
+        password: "",
     })
+    const emailRef = useRef("")
+    const passwordRef = useRef("")
 
-const {itCouldBeAnyName} = props
+    const { itCouldBeAnyName } = props
+    const navigate = useNavigate()
 
-const navigate = useNavigate()
-const [error, setError] = useState("")
-
-const blurHandler = (e) =>{
-    
+    useEffect(()=>{
+        function start(){
+            gapi.client.init({
+                clientId: process.env.REACT_APP_GOOGLE_CLIENT,
+                scope:""
+            })
+            gapi.load("client:auth2", start)
+        }
+    }, [])
+    const blurHandler = (e) => {
         const propertyName = e.target.name
         const propertyValue = e.target.value
-        setUserData(oldState=>{
+        setUserData(oldState => {
             return {
                 ...oldState,
-        [propertyName]: propertyValue,
-        
-    }}
-    )
+                [propertyName]: propertyValue,
+            }
+        })
+    }
+    const updateRef = (e) =>{
 
-}
-
-
-    const submitHandler = (e) =>{
+    }
+    const submitHandler = (e) => {
         e.preventDefault()
 
-        axios.post(`${process.env.REACT_APP_BE_URL}/auth/signin`,userData)
-    .then(res=>{
-        localStorage.setItem("toDoToken",JSON.stringify(res.data.data.token))
+        console.log("refernce values in ref", emailRef.current.value)
+        axios.post(`${process.env.REACT_APP_BE_URL}/auth/signin`, userData)
+            .then(res => {
+                localStorage.setItem("toDoToken", JSON.stringify(res.data.data.token))
+                itCouldBeAnyName()
+                navigate("/dashboard")
+            })
+            .catch(err => setError(err.response.data.message))
+    }
+
+    const onSuccess = (res) => {
+        localStorage.setItem("toDoToken", JSON.stringify(res.tokenObj.id_token))
         itCouldBeAnyName()
         navigate("/dashboard")
-    })
-    .catch(err => setError(err.response.data.message))
-    }   
-    
-    const onSuccess = (res) => {
-        console.log("succss", res)
     }
 
     const onFailure = (err) => {
-        console.log("error", err)
+        setError("erro occured while connecting Google")
     }
     return (
-    <div>
-        <h3>Log In</h3>
-        <form action='post' onSubmit={submitHandler}>
-            <div>
-            <label htmlFor="email">Email   :  </label>
-            <input type="email" id="email" placeholder="enter your email" name="email" autoComplete='none' onBlur={blurHandler}/>
-            </div>
+        <div>
+            <h3>Log In</h3>
+            <form action='post' onSubmit={submitHandler}>
+                <div>
+                    <label 
+                        htmlFor="email">
+                        Email   :  
+                        </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        placeholder="enter your email" 
+                        name="email" 
+                        autoComplete='none' 
+                        onBlur={blurHandler}
+                        ref={emailRef}
+                        onChange={updateRef} />
+                </div>
 
-            <div>
-            <label htmlFor="password">password   :  </label>
-            <input type="password" id="password" placeholder="enter your password" name="password" onBlur={blurHandler}/>
-            </div>
-
-            <button type='submit'> Log In</button>
-            <hr/>
-            {
-                error? (<p>{error}</p>) : null
-            }
-            <GoogleLogin 
-                clientId={process.env.REACT_APP_GOOGLE_CLIENT}
-                buttonText="Google Login"
-                onSuccess={onSuccess}
-                onFailure={onFailure}
+                <div>
+                    <label 
+                        htmlFor="password">
+                        password   :
+                    </label>
+                    <input 
+                        type="password"
+                        id="password"
+                        placeholder="enter your password"
+                        name="password"
+                        onBlur={blurHandler}
+                        ref={passwordRef}
+                        onChange={updateRef} />
+                </div>
+                <button 
+                    type='submit'> 
+                    Log In
+                </button>
+                <hr />
+                {
+                    error ? 
+                        (<p>{error}</p>) 
+                        : null
+                }
+                <GoogleLogin
+                    clientId={process.env.REACT_APP_GOOGLE_CLIENT}
+                    buttonText="Google Login"
+                    onSuccess={onSuccess}
+                    onFailure={onFailure}
                 />
-        </form>
-
+            </form>
         </div>
     )
 }
-
 export default Signin

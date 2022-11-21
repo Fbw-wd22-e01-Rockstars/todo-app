@@ -10,18 +10,14 @@ import AuthContext from "../../context/Auth/AuthContext";
 function Dashboard() {
  
   const navigate = useNavigate()
-  const {authorized} = useContext(AuthContext)
-
+  const {authorized} = props
   const [taskList, setTaskList] = useState([])
 
-  const updateTaskList = ( list ) =>{
-    setTaskList(list)
-  }
-
+  const updateTaskList = ( list ) => setTaskList(list)
+  
   const fetchUpdatedTasks = () =>{
     const myToken = JSON.parse(localStorage.getItem("toDoToken"))
-        const configuration = {
-            
+        const configuration = {      
             headers:{
                 'Authorization' : `Bearer ${myToken}`
             }
@@ -34,26 +30,32 @@ function Dashboard() {
   //Component will mount
 
    useEffect(()=>{
-    if(!authorized) 
-      navigate("/signin")
-  },[]
-  ) 
+    if(!authorized) navigate("/signin")
+  },[]) 
 
+  //ComponentWillUnmount // useEffect hook with return statement, we will pass a call back in return statement
+  // that will be triggered as component is demounting
+  
   // it is a way to do something when we are demounting this component
-  //ComponentWillUnmount
+  // we clear those effects or memories that are no more required in our APP in return method of useEffect
 
   useEffect(()=>{
     return(()=>{
 
       console.log("component demounted")
-      // we clear those effects or memories that are no more required in our APP
     })
   })
 
   return (
     <div>
-      <NewTask updateTaskList={updateTaskList} fetchUpdatedTasks={fetchUpdatedTasks}/>
-      <TasksList taskList={taskList} updateTaskList={updateTaskList}/>
+      {/* Component to add new Task */}
+      <NewTask 
+        updateTaskList={updateTaskList} 
+        fetchUpdatedTasks={fetchUpdatedTasks}/>
+      {/* Component to render all submitted Tasks */}
+      <TasksList 
+        taskList={taskList} 
+        updateTaskList={updateTaskList}/>
     </div>
   );
 }
