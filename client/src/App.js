@@ -45,7 +45,7 @@ function App() {
 
       <Router>
         <NavBar authorized={authorized} authHandler={authHandler}/>
-        TO-DO App
+        TO-DO App Protected
           <Routes>
             <Route path='/dashboard' element={<Dashboard authorized={authorized}/>} />
             <Route path='/signin' element={<Signin itCouldBeAnyName={authHandler} />} />
